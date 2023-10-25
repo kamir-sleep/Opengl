@@ -1,0 +1,105 @@
+#GUIA DE LABORATORIO
+#NRO. 1
+
+#Paso 1: Pagina de descargas
+Ir a: https://jogamp.org
+
+#paso 2: descargar librerias
+	- gluegen-javadoc.7z
+	- jogamp-all-platforms.7z
+	- jogl-javadoc.7z
+	
+#Paso 3: Configurar Eclipse
+	- eclipse: windows/preferences/java/Build Path/User Libraries
+	- [NEW] crear una libreria "JOGL"  y OK.
+	
+	- [Add External JARs..] 
+		de "\jogamp-all-platforms\jar" seleccionar "gluegen-rt.jar" 
+	- "Native Library Ocation:(None)" hacer click en [Edit..]
+		- "Location path:" seleccionar la carpeta "lib"  de "\jogamp-all-platforms"
+		
+	- [Add External JARs..] 
+		de "\jogamp-all-platforms\jar" seleccionar "jogl-all.jar" 
+	- "Native Library Ocation:(None)" hacer click en [Edit..]
+		- "Location path:" seleccionar la carpeta "lib"  de "\jogamp-all-platforms"
+		
+	-volvemos a "gluegen-rt"
+	- "javadoc Location" hacer click en [Edit..]
+		- "javadoc location:" seleccionar la carpeta "/gluegen/javadoc/"
+		[Validate..]
+	
+	-volvemos a "jogl-all"
+	- "javadoc Location" hacer click en [Edit..]
+		- "javadoc location:" seleccionar la carpeta "jogl/javadoc/"
+		[Validate..]
+	[Apply and Close]
+
+#Paso 4: Crear un proyecto
+
+	- file/new/ Java Project
+	- Next >
+	- Pestaña "Libraries"
+	- [Add Library..] + "User Library"
+	//Si no funciona la adicion de librerias
+	- Click Derecho en proyecto + Build Path + Add libraries + adicionar "JOGL"
+	
+#Paso 5: Crear paquete
+	
+#Paso 6: Crear la clase
+		
+#En caso de error:
+	- In Eclipse do as follows: Run -> Run Configurations -> Arguments
+	en "VM arguments":
+		--add-exports java.base/java.lang=ALL-UNNAMED
+		--add-exports java.desktop/sun.awt=ALL-UNNAMED
+		--add-exports java.desktop/sun.java2d=ALL-UNNAMED
+************************************************************************************
+#CODIGO DEL PROYECTO
+
+	private static final long serialVersionUID = 1L;
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Principal ren= new Principal();
+	}
+	public Principal() {
+		super("Programación Gráfica - OpenGL");
+		this.setSize(640,480);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		
+		GLProfile profile = GLProfile.get(GLProfile.GL2);
+		GLCapabilities caps = new GLCapabilities(profile);
+		GLCanvas canvas = new GLCanvas(caps);
+		canvas.addGLEventListener(this);
+		this.add(canvas);
+		this.setVisible(true);
+		canvas.requestFocusInWindow();
+	}
+	
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glClearColor(0.0f, 0.0f, 1.0f, 0.0f);		
+		gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);		
+		gl.glFlush();
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	public void init(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
+	}
+
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+		// TODO Auto-generated method stub	
+	}

@@ -1,0 +1,92 @@
+package proy_02;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.awt.*;
+import com.jogamp.opengl.util.FPSAnimator;
+
+public class Principal extends GLJPanel implements GLEventListener, KeyListener {
+	private static final long serialVersionUID = 1L;
+	float pos_x= 1;
+	
+	public static void main(String[] args) {
+        JFrame window = new JFrame("Programación Grafica.");
+        Principal panel = new Principal();
+        window.setContentPane(panel);
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setVisible(true);
+        panel.requestFocusInWindow();
+        FPSAnimator animator = new FPSAnimator(panel, 400, true);
+	    animator.start();
+	}
+	public Principal() {
+        super( new GLCapabilities(null) ); // Makes a panel with default OpenGL "capabilities".
+        setPreferredSize( new Dimension(640,480) );
+        addGLEventListener(this); // A listener is essential! The listener is where the OpenGL programming lives.
+        addKeyListener(this);	
+	}
+	
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glClearColor(1f, 1f, 1f, 0.0f);		
+		gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
+
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();	
+				gl.glPushMatrix();
+				gl.glTranslatef(0, 0, 0);
+				gl.glColor3f(1,0,0);
+				gl.glBegin(GL2.GL_TRIANGLES);
+				gl.glVertex3f(-0.1f,-0.20f,0.0f);
+				gl.glVertex3f(0.1f,-0.20f,0.0f);
+				gl.glVertex3f(0.0f,0.20f,0.0f);
+				gl.glEnd();
+				
+				gl.glPopMatrix();
+		gl.glFlush();
+	}
+	@Override
+	public void keyPressed(java.awt.event.KeyEvent e) {		
+		int key = e.getKeyCode();	
+		if (key==38) { //arriba
+			pos_x +=0.01;  //contador del eje X
+		}
+		if (key==40) {//abajo 
+			pos_x -=0.01;  //contador del eje X
+		}
+	}
+	
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	public void init(GLAutoDrawable drawable) {
+        // called when the panel is created
+        GL2 gl2 = drawable.getGL().getGL2();
+        gl2.glMatrixMode(GL2.GL_PROJECTION);
+        gl2.glOrtho(-4, 4, -2, 2, -2, 2);  // simple orthographic projection
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
+        gl2.glClearColor( 0.5F, 0.5F, 0.5F, 1 );
+        gl2.glEnable(GL2.GL_DEPTH_TEST);
+	}
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+		// TODO Auto-generated method stub	
+	}
+	@Override
+	public void keyTyped(java.awt.event.KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+	@Override
+	public void keyReleased(java.awt.event.KeyEvent e) {
+		// TODO Auto-generated method stub	
+	}
+}

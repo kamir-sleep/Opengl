@@ -1,0 +1,330 @@
+	
+	
+	import java.awt.event.KeyListener;
+	
+	import javax.swing.JFrame;
+	import javax.swing.JOptionPane;
+	
+	import com.jogamp.newt.event.KeyEvent;
+	
+	import com.jogamp.opengl.GL2;
+	import com.jogamp.opengl.GLAutoDrawable;
+	import com.jogamp.opengl.GLCapabilities;
+	import com.jogamp.opengl.GLEventListener;
+	import com.jogamp.opengl.GLProfile;
+	import com.jogamp.opengl.awt.GLCanvas;
+	import com.jogamp.opengl.util.FPSAnimator;
+	
+	public class Principal extends JFrame implements GLEventListener , KeyListener{
+	
+		private static final long serialVersionUID = 1L;
+		boolean siu=true;
+		float x=(0.0f);
+		float y=(0.5f);
+				
+		float pos_x= (0.0f);
+		float pos_y= (-0.75f);
+		float pos_x_circuloazul= (-0.7f);
+		float pos_y_circuloazul= (1.2f);
+		
+		float pos_x_circulorojo= (0.0f);
+		float pos_y_circulorojo= (1.7f);
+		
+		float pos_x_circuloverde= (0.7f);
+		float pos_y_circuloverde= (1.5f);
+		
+	public static void main(String[] args) {
+			
+			Principal ren= new Principal();
+			
+			
+		}
+	
+		public Principal() {
+			super("Programación Gráfica - OpenGL");
+			this.setSize(640,640); //tamaño de pantalla
+			this.setLocationRelativeTo(null);
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			this.setResizable(true); //para ver si el tamaño de pantalla pueda modificarse
+			GLProfile profile = GLProfile.get(GLProfile.GL2);
+			GLCapabilities caps = new GLCapabilities(profile);
+			GLCanvas canvas = new GLCanvas(caps);
+			canvas.addGLEventListener(this);
+			canvas.addKeyListener(this);
+			this.add(canvas);
+			this.setVisible(true);
+			canvas.requestFocusInWindow();
+			
+			FPSAnimator animator = new FPSAnimator(canvas, 400, true);
+		    animator.start();
+		}
+		
+		@Override
+		public void display(GLAutoDrawable drawable) { //toda funcion del dibujo aqui
+			// TODO Auto-generated method stub
+			GL2 gl = drawable.getGL().getGL2();	
+			gl.glClearColor(0.0f, 0.1f, 0.0f, 0.0f);	//se trabaja con color rgb rojo verde azul alfa	
+			gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);		
+			gl.glFlush();
+			
+			
+			//CIRCULO AZUL
+			gl.glMatrixMode(GL2.GL_PROJECTION);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();	
+			gl.glTranslatef(pos_x_circuloazul, pos_y_circuloazul, 0f);	//es x y 0 DA EL LUGAR DE INICIO
+					
+			 gl.glColor3f(0.0f, 0.0f, 1.0f);
+			 gl.glBegin(gl.GL_POLYGON);
+				for(int i=0;i<100;i++) {
+					float x=(float) Math.cos(i*2*Math.PI/100);
+					float y=(float) Math.sin(i*2*Math.PI/100);
+					gl.glVertex2f((float) (0.1*x), (float)(0.1*y));
+					gl.glColor3f(0.0f, 0.0f, 1.0f);
+				}
+				gl.glEnd();	
+				
+				pos_y_circuloazul -=0.023f;
+				if(pos_y_circuloazul<-1.5f) {	pos_y_circuloazul= 1.7f;}
+	
+			gl.glPopMatrix();
+			
+			//CIRCULO ROJO
+			gl.glMatrixMode(GL2.GL_PROJECTION);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();	
+			gl.glTranslatef(pos_x_circulorojo, pos_y_circulorojo, 0f);	//es x y 0 DA EL LUGAR DE INICIO
+			
+			gl.glColor3f(1.0f, 0.0f, 0.0f);
+			gl.glBegin(gl.GL_POLYGON);
+			for(int i=0;i<100;i++) {
+				float x=(float) Math.cos(i*2*Math.PI/100);
+				float y=(float) Math.sin(i*2*Math.PI/100);
+				gl.glVertex2f((float) (0.1*x), (float)(0.1*y));
+				gl.glColor3f(1.0f, 0.0f, 0.0f);
+			}
+			gl.glEnd();	
+				pos_y_circulorojo -=0.018f;
+			if(pos_y_circulorojo<-1.5f) {	pos_y_circulorojo= 1.2f;}
+			gl.glPopMatrix();
+			
+			
+			//CIRCULO VERDE
+			    gl.glMatrixMode(GL2.GL_PROJECTION);
+				gl.glLoadIdentity();	
+				gl.glPushMatrix();	
+				gl.glTranslatef(pos_x_circuloverde, pos_y_circuloverde, 0f);	//es x y 0 DA EL LUGAR DE INICIO
+				
+				 gl.glColor3f(0.0f, 1.0f, 0.0f);
+				 gl.glBegin(gl.GL_POLYGON);
+					for(int i=0;i<100;i++) {
+						float x=(float) Math.cos(i*2*Math.PI/100);
+						float y=(float) Math.sin(i*2*Math.PI/100);
+						gl.glVertex2f((float) (0.1*x), (float)(0.1*y));
+						gl.glColor3f(0.0f, 1.0f, 0.0f);
+					}
+					gl.glEnd();	
+				
+			pos_y_circuloverde -=0.018f;
+			if(pos_y_circuloverde<-1.5f) {	pos_y_circuloverde= 1.4f;}
+				 gl.glPopMatrix();	
+		
+			////ROBOT
+			 	gl.glMatrixMode(GL2.GL_PROJECTION);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();	
+				gl.glTranslatef(pos_x, pos_y, 0f);	//es x y 0 DA EL LUGAR DE INICIO
+			//CABEZA ROBOT
+			 gl.glColor3f(1,0,0);
+				gl.glBegin(GL2.GL_POLYGON_BIT);
+				gl.glVertex3f(0.0f,0.2f,0.0f);
+				gl.glVertex3f(0.0f,0.3f,0.0f);
+				gl.glVertex3f(0.1f,0.2f,0.0f);
+				gl.glVertex3f(0.1f,0.3f,0.0f);
+				gl.glEnd();
+				//CUERPO
+				gl.glColor3f(0,0,1);
+				gl.glBegin(GL2.GL_POLYGON);
+				gl.glVertex3f(-0.05f,0.2f,0.0f);
+				gl.glVertex3f(0.15f,0.2f,0.0f);
+				gl.glVertex3f(0.15f,-0.05f,0.0f);
+				gl.glVertex3f(-0.05f,-0.05f,0.0f);
+				gl.glEnd();
+				
+				//brazo izquierdo
+				gl.glColor3f(1,0,0);
+				gl.glBegin(GL2.GL_POLYGON_BIT);
+				gl.glVertex3f(-0.05f,0.2f,0.0f);
+				gl.glVertex3f(-0.1f,0.2f,0.0f);
+				gl.glVertex3f(-0.05f,0.0f,0.0f);
+				gl.glVertex3f(-0.1f,0.f,0.0f);
+				gl.glEnd();
+				
+				//brazo izquierdo
+				gl.glColor3f(1,0,0);
+				gl.glBegin(GL2.GL_POLYGON_BIT);
+				gl.glVertex3f(0.15f,0.2f,0.0f);
+				gl.glVertex3f(0.2f,0.2f,0.0f);
+				gl.glVertex3f(0.15f,0.0f,0.0f);
+				gl.glVertex3f(0.2f,0.0f,0.0f);
+				gl.glEnd();
+				
+				//pie izquierdo
+				gl.glColor3f(1,0,0);
+				gl.glBegin(GL2.GL_POLYGON_BIT);
+				gl.glVertex3f(0.0f,-0.05f,0.0f);
+				gl.glVertex3f(0.0f,-0.2f,0.0f);
+				gl.glVertex3f(-0.05f,-0.05f,0.0f);
+				gl.glVertex3f(-0.05f,-0.2f,0.0f);
+				gl.glEnd();
+				
+				//brazo derecho
+				gl.glColor3f(1,0,0);
+				gl.glBegin(GL2.GL_POLYGON_BIT);
+				gl.glVertex3f(0.1f,-0.05f,0.0f);
+				gl.glVertex3f(0.1f,-0.2f,0.0f);
+				gl.glVertex3f(0.15f,-0.05f,0.0f);
+				gl.glVertex3f(0.15f,-0.2f,0.0f);
+				gl.glEnd();
+				choquecirculo();
+				gl.glPopMatrix();
+				
+				
+		
+		/*	HACER IDA Y VUELTA 
+		 	if(siu) {
+				pos_x_circulorojo+=0.009f;
+						if(pos_x_circulorojo>1f) {
+							siu=false;
+						}
+				
+				}else {
+					pos_x_circulorojo -= 0.009f;
+					if(pos_x_circulorojo<-1f) {
+						siu=true;
+					}
+				}*/
+		}
+			
+				
+			
+		
+		@Override
+		public void dispose(GLAutoDrawable drawable) {
+			// TODO Auto-generated method stub		
+		}
+	
+		@Override
+		public void init(GLAutoDrawable drawable) { //inicializa variables al arrancar el proyecto
+			// TODO Auto-generated method stub
+			GL2 gl = drawable.getGL().getGL2();
+	
+			gl.glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
+			System.out.println("Iniciando Proyecto");
+			
+		}
+	
+		@Override
+		public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+			// TODO Auto-generated method stub	
+			
+			
+		}
+	
+		@Override
+		public void keyTyped(java.awt.event.KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		public void vidas() {
+			int vidas=3;
+			if(choquecirculo()) {
+				vidas=-1;
+				JOptionPane.showConfirmDialog(this, "vidas: "+vidas);
+			}
+		}
+		int vidas=2;
+		//el choque en pixeles falta ver la circunferencia 
+	public boolean choquecirculo() {
+		if(vidas<0) {
+			JOptionPane.showConfirmDialog(this, "FIN DEL JUEGO");
+			System.exit( 0 ); 
+			
+		}
+		//choque azul
+				if((pos_x-pos_x_circuloazul)<0.2&&(pos_x-pos_x_circuloazul)>-0.31&&(pos_y-pos_y_circuloazul)>-0.37&&(pos_y-pos_y_circuloazul)<0.33) {
+					System.out.println("bum");
+					JOptionPane.showConfirmDialog(this, "choco vidas: "+vidas);
+					pos_y_circuloazul= 1.7f;
+					vidas=vidas-1;
+					System.out.println(vidas);
+						}
+		//choque rojo
+		if((pos_x-pos_x_circulorojo)<0.2&&(pos_x-pos_x_circulorojo)>-0.31&&(pos_y-pos_y_circulorojo)>-0.37&&(pos_y-pos_y_circulorojo)<0.33) {
+			System.out.println("bum");
+			JOptionPane.showConfirmDialog(this, "choco vidas: "+vidas);
+			pos_y_circulorojo= 1.7f;
+			vidas=vidas-1;
+			System.out.println(vidas);
+				}
+		//choque verde
+				if((pos_x-pos_x_circuloverde)<0.2&&(pos_x-pos_x_circuloverde)>-0.31&&(pos_y-pos_y_circuloverde)>-0.37&&(pos_y-pos_y_circuloverde)<0.33) {
+					System.out.println("bum");
+					JOptionPane.showConfirmDialog(this, "choco vidas: "+vidas);
+					pos_y_circuloverde= 1.7f;
+					vidas=vidas-1;
+					System.out.println(vidas);
+						}
+return true;
+	}
+		@Override
+		public void keyPressed(java.awt.event.KeyEvent e) {
+			// TODO Auto-generated method stub
+			int key = e.getKeyCode();
+		//derecha
+				if(pos_x>0.7f ) {
+					pos_x=0.7f;
+					
+			//izquierda
+				}else {
+					if(pos_x<=-0.8f) {
+							pos_x=-0.8f;
+					}
+				}
+				//arriba
+				if( pos_y>0.63f) {
+					pos_y=0.63f;
+			//abajo
+				}else {
+					if(pos_y<=-0.8f) {
+					   pos_y=-0.8f;
+					}
+				}
+				if(key==39) {
+					pos_x += 0.02f;
+				}
+				if(key==37) {
+					pos_x -= 0.02f;
+				}
+				if(key==38) {
+					pos_y += 0.02f;
+				}
+				if(key==40) {
+					pos_y -= 0.02f;
+				}
+				
+				//System.out.println((pos_y_circuloazul-pos_y));
+				
+			System.out.println("Tecla presionado::"+ key);
+			
+		}
+	
+		@Override
+		public void keyReleased(java.awt.event.KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	
+		
+	}

@@ -1,0 +1,63 @@
+
+Problema 1.- Escribir la clase: Punto, que contenga los atributos privados: x, y; de tipo double, correspondiente a las coordenadas (x, y) de un punto en el sistema de coordenadas cartesiano (x corresponde a la abscisa, y corresponde a la ordenada); escribir el método constructor: Punto(double x, double y), redefinir el método constructor por defecto; añadir los métodos:
+	seter y geter para ambos atributos
+	toString(), que devuelva una cadena con los valores de las coordenadas: x, y
+	modulo(Punto p) que devuelva la distancia desde el origen del sistema de coordenadas hasta el punto p.
+	distancia(Punto p1, Punto p2), que devuelva la distancia más corta entre los puntos: p1 y p2
+	cuadrante(Punto p), que devuelva un número entero: 1, 2, 3 o 4, si el punto: p, se ubica dentro los cuadrantes: I, II, III o IV respectivamente o bien, devuelva: 12, 14, 23 o 34, si el punto: p, se ubica sobre los ejes de coordenadas: I y II, I y IV, II y III o III y IV respectivamente
+	angulo(Punto p), el ángulo existente desde el eje +x hasta la recta que une el origen con el punto: p, cuando se rota en el sentido contrario a las agujas del reloj, expresado en radianes.
+
+
+Problema 2.- Escribir la clase: Triangulo, que contenga los atributos privados: p1, p2, p3, de tipo Punto, correspondiente a los vértices de un triángulo, escribir el método constructor: Triangulo(Punto p1, Punto p2, Punto p3) y añadir los métodos:
+	trianguloValido(Punto p1, Punto p2, Punto p3), que devuelva: true, si los puntos conforman una figura triangular.
+	trianguloValido(Triangulo t), que devuelva: true, si el objeto: t, contiene un triángulo que conforman una figura triangular.
+	area(Punto p1, Punto p2, Punto p3), que devuelva el área del triangulo formado por los puntos: p1, p2 y p3.
+	area(Triangulo t), que devuelva el área del triángulo t.
+	cuadrante(Triangulo t), que devuelva un número entero: 1, 2, 3 o 4, si el triángulo: t, se ubica dentro los cuadrantes: I, II, III o IV respectivamente o toca uno o los dos ejes adyacentes; devuelva: 12, 14, 23 o 34, si el triángulo: t, se localiza sobre los cuadrantes: I y II, I y IV, II y III o III y IV respectivamente aunque toque uno o más ejes adyacentes; devuelva 123, 234, 134 o 124, si el triángulo: t se localiza sobre los cuadrantes: I II y III,  II III y IV, I III y IV o I III y IV respectivamente; y devuelva 1234, si el triángulo: t, se ubica sobre los cuatro cuadrantes.
+
+Problema 3.-
+Escribir un programa en Java, usando los conocimientos adquiridos en Programación I y II, que simule el funcionamiento de una oficina que se encuentra al interior de un pequeña casa, al final de un largo pasillo que se ilumina con una lámpara de techo (que es necesario encenderla para transitar por el pasillo, por la escacez de iluminación existente), que es activado por un conmutador con dos interruptores, uno cerca de la puerta principal y otro cerca de la oficina.
+En esta casa no hay más habitantes que el propietario que solo tiene su oficina y solo llega a trabajar y luego se retira de la casa.
+Tanto la oficina como la casa tienen puertas con cerraduras (conocidss también como chapas en nuestro medio) que pueden asegurarse con llave.
+La oficina tiene una lámpara que también es necesario encenderla para trabajar, debido a la obscuridad reinante.
+La oficina es atendida por su propietario, pero también pueden ingresar hasta cuatro clientes; de haber más clientes, se cierra la puerta (sin asegurarla) para que el resto de los clientes hagan cola en el pasillo.
+
+Inicialmente la casa se encuentra con todas las puertas cerradas, cerraduras aseguradas, lámparas apagadas y vacía, sin nadie adentro.
+El programa de simulación del funcionamiento de la oficina estará basada en un menu (como el de abajo) y ante cualquier acción del mismo, el programa imprimirá una salida correspondiente a la acción que se realizó, seguida por la impresión del estado de la oficina, que contendrá:
+	estado de las puertas y sus cerraduras
+	estado de las lámparas
+	número de personas en la oficina
+	número de clientes en el pasillo
+
+Por ejemplo: 
+ESTADO DEL LA CASA:
+	Puerta : cerrada
+	Cerradura : asegurada
+	lampara : apagada
+	numero de personas: 5
+ESTADO DE LA OFICINA
+	puerta: abierta
+	Cerradura abierta
+	lampara: encendida
+	numero de clientes: 2
+
+
+Sugerencia del Menu del programa:
+
+1. Abrir la puerta principal
+2. Cerrar la puerta principal
+3. Asegurar la cerradura de la puerta principal
+4. Desasegurar la cerradura de la puerta principal
+5. Abrir la puerta de la oficina
+6. Cerrar la puerta de la oficina
+7. Asegurar la cerradura de la puerta de la oficina
+8. Desasegurar la cerradura de la puerta de la oficina
+9. Encender el foco del pasillo
+10. Apagar el foco del pasillo
+11. Encender el foco de la oficina
+12. Apagar el foco del la oficina
+13. Ingresar a la casa
+14. Salir de la casa
+15. Ingresar a la oficina
+16. Salir de la oficina
+17. Finalizar la aplicación (solo cuanto no haya nadie en el edificio y todos se encuentre apagado y asegurado).

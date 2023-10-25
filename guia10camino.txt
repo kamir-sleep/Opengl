@@ -1,0 +1,426 @@
+package guia10ofi;
+
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.newt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.awt.ImageUtil;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
+
+public class Guia10 extends JFrame implements GLEventListener, KeyListener {
+	private static final long serialVersionUID = 1L;
+	private String[] textureFileNames = {
+			"arriba.png",
+			"carretera.png",
+			"paisaje01.png"
+	};
+	private Texture[] textures = new Texture[textureFileNames.length];
+	//CAMINO
+	private float[] triangleCoords = {
+    		0f,0f,0.0f, 
+    		2f,0f,0.0f, 
+    		2f,0.5f,0.0f, 
+    		1.25f,1.3f,0.0f, 
+    		0.75f,1.3f,0.0f, 
+    		0f,0.55f,0.0f,
+			
+    };
+	private float[] triangleTexture = {
+    		0f,0,0, 
+    		1f,0f,0, 
+    		1f,0.20f,0, 
+    		0.55f,0.35f,0, 
+    		0.41f,0.35f,0, 
+    		0f,0.25f,0, //es el dibujo de adentro es mover las texturas como ya sabes
+    };
+	private FloatBuffer triangleCoordBuffer = Buffers.newDirectFloatBuffer(triangleCoords);
+	private FloatBuffer triangleTextureBuffer = Buffers.newDirectFloatBuffer(triangleTexture);
+	
+/*	private float[] luzAmbiente = {1f, 1f, 0f, 1f };
+	private float[] luzDifusa = {1f, 1f, 1f, 0f };  //RGBA ESTE ES EL COLOR DE FONDO
+	private float[] luzPos = {-0.5f, 0.0f, 0.9f, 0f };
+	//plantas
+	  */
+	private float[] triangleCoordsV = {
+    		-1f,-0.2f,0.0f, 
+    		-1f,-2.2f,0.0f, 
+    		0.8f,-0.2f,0.0f,
+    		3f,-0.2f,0.0f, 
+    		3f,-2.2f,0.0f, 
+    		1.2f,-0.2f,0.0f,	
+		   };
+	private float[] triangleTextureV = {
+    		0f,0.53f,0, 
+    		0f,-0.33f,0, 
+    		0.83f,0.25f,0, 
+    		-1f,0.53f,0, 
+    		-1f,-0.3f,0, 
+    		-0.1f,0.25f,0,
+    };
+	
+	 
+	
+	private FloatBuffer triangleCoordBufferV = Buffers.newDirectFloatBuffer(triangleCoordsV);
+	private FloatBuffer triangleTextureBufferV = Buffers.newDirectFloatBuffer(triangleTextureV);
+	///tronco
+	float arbx=0.34f,arby=0.18f;
+	float scx=0.8f,scy=0.6f;
+	////hojas
+	float hojax=0.6f,hojay=0.62f;
+	float scax=0.6f,scay=0.6f;
+	
+	//////lado izquierdo
+	float rbx=0.34f,rby=0.18f;
+	float icx=0.8f,icy=0.6f;
+	////hojas
+	float ojax=0.6f,ojay=0.62f;
+	float icax=0.6f,icay=0.6f;
+
+ private float[] tronco= {
+			0f,0f,0.0f, 
+    		0.05f,0f,0.0f, 
+    		0.05f,0.2f,0.0f,
+    		0f,0.2f,0.0f
+	 };
+ 
+ private float[] troncotextura= {
+		 0.45f,0.37f,0, 
+		 0.51f,0.37f,0, 
+		 0.51f,0.58f,0, 
+		 0.45f,0.58f,0 
+ };
+ 
+ private float[] hojas= {
+		 -0.1f,-0.2f,0.0f, 
+		 0.1f,-0.2f,0.0f, 
+		 0f,0.2f,0.0f
+		 /*-0.1f,0f,0.0f, 
+		 0.1f,0f,0.0f, 
+		 0f,0.4f,0.0f*/
+ };
+ 
+ private float[] hojastextura= {
+		 0.35f,0.58f,0, 
+		 0.62f,0.58f,0, 
+		 0.5f,1f,0 
+ };
+ 
+ private FloatBuffer hojasBuffer = Buffers.newDirectFloatBuffer(hojas);
+ private FloatBuffer hojastexturaBuffer = Buffers.newDirectFloatBuffer(hojastextura);
+ private FloatBuffer troncoBuffer = Buffers.newDirectFloatBuffer(tronco);
+ private FloatBuffer troncotexturaBuffer = Buffers.newDirectFloatBuffer(troncotextura);
+	
+ private float[] cielo= {
+		 -1f,0.f,0.0f, 
+		 1f,0.f,0.0f, 
+		 1f,1f,0.0f, 
+		 -1f,1f,0.0f, 
+		 
+ };
+ 
+ private float[] cielotextura= {
+	
+		 0f,1f,0 ,
+		 1f,1f,0,
+		 1.f,0.6f,0, 
+		  0.f,0.6f,0,
+ };
+ 
+ private FloatBuffer cieloBuffer = Buffers.newDirectFloatBuffer(cielo);
+ private FloatBuffer cielotexturaBuffer = Buffers.newDirectFloatBuffer(cielotextura);
+ 
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Guia10 ren= new Guia10();
+	}
+	public Guia10() {
+		super("Programación Gráfica - OpenGL");
+		this.setSize(640,480);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		
+		GLProfile profile = GLProfile.get(GLProfile.GL2);
+		GLCapabilities caps = new GLCapabilities(profile);
+		GLCanvas canvas = new GLCanvas(caps);
+		canvas.addGLEventListener(this);
+		canvas.addKeyListener(this);
+		
+		this.add(canvas);
+		this.setVisible(true);
+		canvas.requestFocusInWindow();
+		
+		FPSAnimator animator = new FPSAnimator(canvas, 400, true);
+	    animator.start();	    
+	}
+	//algoritmos mas colisiones de dos objetos,instancias,fotogramas
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glClearColor(1f, 1f, 1f, 0.0f);		
+		gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
+
+		/////cielo
+		gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, cieloBuffer );  
+		gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, cielotexturaBuffer );
+		  gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+		    //gl.glEnableClientState( GL2.GL_COLOR_ARRAY );
+		    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+		    
+		    gl.glMatrixMode(GL2.GL_PROJECTION);
+			gl.glLoadIdentity();	
+			
+					textures[0].bind(gl);
+					
+					gl.glPushMatrix();
+					gl.glTranslatef(0f, 1f, 0);
+					gl.glRotatef(180, 0, 0, 0);
+				gl.glColor3f(1,1,1);
+
+					gl.glDrawArrays( GL2.GL_QUADS, 0, 32 );				
+					
+					gl.glPopMatrix();
+		
+		////camino
+		gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, triangleCoordBuffer );  
+		gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, triangleTextureBuffer );
+	
+		
+/*		//Definir luz (tipo de luz, componente de la luz, array, )
+				gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, luzAmbiente, 0);
+				gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, luzDifusa, 0);
+				gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, luzPos, 0);
+		//Habilitar luz (tipo de luz)
+		gl.glEnable(GL2.GL_LIGHT0);
+		*/
+		//ACTIVANDO
+	    gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+	    //gl.glEnableClientState( GL2.GL_COLOR_ARRAY );
+	    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+	    
+	    gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();	
+		
+				textures[1].bind(gl);
+				
+				gl.glPushMatrix();
+				gl.glTranslatef(-1f, -1f, 0);
+			gl.glColor3f(1,1,1);
+				
+				
+				gl.glDrawArrays( GL2.GL_POLYGON, 0, 6 );
+				
+				
+				gl.glPopMatrix();
+				
+		//triangulo
+		gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, triangleCoordBufferV );  
+		gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, triangleTextureBufferV );	
+		
+		 gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+		 //   gl.glEnableClientState( GL2.GL_COLOR_ARRAY );
+		    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+		    
+		    gl.glMatrixMode(GL2.GL_PROJECTION);
+			gl.glLoadIdentity();	
+			
+					textures[2].bind(gl);
+					
+					gl.glPushMatrix();
+					gl.glTranslatef(-1f, 0.5f, 0);
+					//plano
+					gl.glPointSize(5); 
+					gl.glBegin(GL2.GL_POINTS);
+					gl.glVertex3f(0.0f, 0.0f, 0.0f);
+					gl.glEnd();
+					gl.glBegin (GL2.GL_LINES);
+					gl.glVertex3f(-0.50f, 0.00f, 0);
+					gl.glVertex3f(0.50f, 0.00f, 0);
+					
+					gl.glVertex3f(0.00f, 0.50f, 0);
+					gl.glVertex3f(0.00f, -0.50f, 0);
+					
+					gl.glEnd();
+					gl.glColor3f(1,1,1);
+					
+					gl.glDrawArrays( GL2.GL_TRIANGLES, 0, 6 );
+					gl.glPopMatrix();
+				
+					//tronco
+					gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, troncoBuffer );  
+					gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, troncotexturaBuffer );			
+					//ACTIVANDO
+				    gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+				   // gl.glEnableClientState( GL2.GL_COLOR_ARRAY );
+				    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+				    gl.glMatrixMode(GL2.GL_PROJECTION);
+					gl.glLoadIdentity();	
+							textures[1].bind(gl);
+							gl.glPushMatrix();
+							gl.glTranslatef(arbx, arby, 0);
+							gl.glScalef(scx, scy, 0);
+							gl.glColor3f(1,1,1);
+							arbx+=0.0079;
+							arby-=0.0052;
+							scy+=0.016;
+							scx+=0.0058;
+							if(arbx>1.06 ) {
+								 arbx=0.34f;arby=0.18f;
+								 scx=0.8f;scy=0.6f;
+								 ////hojas
+								 scax=0.6f;		scay=0.6f;
+								hojay=0.6f;		hojax=0.62f;
+							}
+							gl.glDrawArrays( GL2.GL_QUADS, 0, 8 );
+							gl.glPopMatrix();
+							///hojas
+							gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, hojasBuffer );  
+							gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, hojastexturaBuffer );	
+							//ACTIVANDO
+						    gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+						    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);	    
+						    gl.glMatrixMode(GL2.GL_PROJECTION);
+							gl.glLoadIdentity();	
+									textures[1].bind(gl);
+									gl.glPushMatrix();
+									gl.glScalef(scax, scay, 0);
+									gl.glTranslatef(hojax, hojay, 0);
+									gl.glColor3f(1,1,1);
+									hojax+=0.0035;
+									hojay-=0.0052;
+									scay+=0.014;
+									scax+=0.0069;
+									gl.glDrawArrays( GL2.GL_TRIANGLES, 0, 24 );
+									gl.glPopMatrix();
+
+								////////////////////////////////////////////////LADO IZQ
+									//tronco
+									gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, troncoBuffer );  
+									gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, troncotexturaBuffer );			
+									//ACTIVANDO
+								    gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+								   // gl.glEnableClientState( GL2.GL_COLOR_ARRAY );
+								    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+								    gl.glMatrixMode(GL2.GL_PROJECTION);
+									gl.glLoadIdentity();	
+										
+											
+											textures[1].bind(gl);
+											gl.glPushMatrix();
+											gl.glTranslatef(rbx, rby, 0);
+											gl.glScalef(icx, icy, 0);
+											gl.glColor3f(1,1,1);
+											
+											rbx-=0.008;
+											rby-=0.0052;
+											icy+=0.016;
+											icx+=0.013;
+											if(rbx<-1.06 ) {
+												 rbx=-0.38f;rby=0.18f;
+												 icx=0.4f;icy=0.6f;
+												 ////hojas
+												 icax=0.6f;		icay=0.6f;
+												ojay=0.6f;		ojax=-0.62f;
+											}
+											gl.glDrawArrays( GL2.GL_QUADS, 0, 8 );
+											gl.glPopMatrix();
+											///hojas
+											gl.glVertexPointer( 3, GL2.GL_FLOAT, 0, hojasBuffer );  
+											gl.glTexCoordPointer( 3,GL2. GL_FLOAT, 0, hojastexturaBuffer );	
+											//ACTIVANDO
+										    gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
+										    gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);	    
+										    gl.glMatrixMode(GL2.GL_PROJECTION);
+											gl.glLoadIdentity();	
+													textures[1].bind(gl);
+													gl.glPushMatrix();
+													gl.glScalef(icax, icay, 0);
+													gl.glTranslatef(ojax, ojay, 0);
+													gl.glColor3f(1,1,1);
+													ojax-=0.0035;
+													ojay-=0.0052;
+													icay+=0.014;
+													icax+=0.0069;
+													gl.glDrawArrays( GL2.GL_TRIANGLES, 0, 24 );
+													gl.glPopMatrix();
+
+															
+		gl.glFlush();
+		
+	}
+	
+	@Override
+	public void keyPressed(java.awt.event.KeyEvent e) {
+		// TODO Auto-generated method stub
+		int key = e.getKeyCode();	
+		if (key==38) { //arriba
+			//tamaño +=0.01;  //contador del eje X
+		}
+		if (key==40) {//abajo 
+			//tamaño -=0.01;  //contador del eje X
+		}
+		//System.out.println("Tecla presionado::"+ key);		
+	}
+	
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	public void init(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub
+		GL2 gl2 = drawable.getGL().getGL2();
+		gl2.glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
+		
+		for (int i = 0; i < textureFileNames.length; i += 1) {
+			BufferedImage img = null;
+			try {
+				img = ImageIO.read(new File("imagenes/" + textureFileNames[i]));
+				ImageUtil.flipImageVertically(img);
+
+				textures[i] = AWTTextureIO.newTexture(GLProfile.getDefault(), img, true);
+				textures[i].setTexParameteri(gl2, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
+				textures[i].setTexParameteri(gl2, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
+				textures[i].enable(gl2);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+
+		}
+	}
+
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+		// TODO Auto-generated method stub	
+	}
+	@Override
+	public void keyTyped(java.awt.event.KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(java.awt.event.KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+}

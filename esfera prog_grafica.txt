@@ -1,0 +1,217 @@
+package principal;
+
+
+import java.nio.FloatBuffer;
+
+import javax.swing.JFrame;
+
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+  //////
+import java.awt.Frame;
+import java.nio.FloatBuffer;
+
+
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.FPSAnimator;
+
+
+public class principal extends GLCanvas implements GLEventListener {
+    private static final long serialVersionUID = 1L;
+    private FPSAnimator animator;
+
+    public static void main(String[] args) {
+        Frame frame = new Frame("Chess Board");
+        principal chessBoard = new principal();
+        frame.add(chessBoard);
+        frame.setSize(400, 400);
+        frame.setVisible(true);
+    }
+
+    public principal() {
+        super();
+
+        // Configuración de OpenGL
+        this.addGLEventListener(this);
+        animator = new FPSAnimator(this, 60);
+        animator.start();
+    }
+
+    @Override
+    public void init(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+
+        // Configuración de OpenGL
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+    }
+
+    @Override
+    public void display(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+
+        // Limpiar el buffer de color y profundidad
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
+        // Configurar la matriz de vista
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(0.0f, 0.0f, -5.0f);
+
+        // Dibujar el tablero de ajedrez
+        drawChessBoard(gl);
+    }
+		
+		
+		
+		// TODO Auto-generated method stub
+		/*GL2 gl = drawable.getGL().getGL2();
+		gl.glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+		gl.glPointSize(5);
+		gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
+		gl.glFlush();
+		///cuadrado
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3f(-pX(500),pY(420), 0.0f);
+		gl.glVertex3f(-pX(500),pY(100), 0.0f);
+		gl.glVertex3f(-pX(200),pY(100), 0.0f);
+		gl.glVertex3f(-pX(200),pY(420), 0.0f);
+
+		*/
+		/*
+		///triangulo
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3f(-pX(50),pY(100), 0.0f);
+		gl.glVertex3f(pX(300),pY(100), 0.0f);
+		gl.glVertex3f(pX(125),pY(400), 0.0f);
+		
+		gl.glEnd();
+		/////nombre  K
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3f(-pX(500),-pY(50), 0.0f);
+		gl.glVertex3f(-pX(500),-pY(400), 0.0f);
+		gl.glEnd();
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3f(-pX(500),-pY(225), 0.0f);
+		gl.glVertex3f(-pX(300),-pY(50), 0.0f);
+		gl.glEnd();
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3f(-pX(500),-pY(225), 0.0f);
+		gl.glVertex3f(-pX(300),-pY(400), 0.0f);
+		gl.glEnd();
+		
+		
+	*/
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+	
+	public Float pX(Integer point) {
+		Float punto = (float) (point/this.getSize().getWidth());
+		return punto;
+	}
+	public Float pY(Integer point) {
+		Float punto = (float) (point/this.getSize().getHeight());	
+		return punto;
+	}
+
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	public void drawChessBoard(GL2 gl) {
+	    final int ROWS = 8;
+	    final int COLS = 8;
+	    final int CELL_SIZE = 1;
+	    final FloatBuffer white = Buffers.newDirectFloatBuffer(new float[] { 1.0f, 1.0f, 1.0f });
+	    final FloatBuffer black = Buffers.newDirectFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
+
+	    gl.glPushMatrix();
+
+	    for (int row = 0; row < ROWS; row++) {
+	        gl.glPushMatrix();
+	        gl.glTranslatef(0.0f, row * CELL_SIZE, 0.0f);
+	        for (int col = 0; col < COLS; col++) {
+	            gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, (row + col) % 2 == 0 ? white : black);
+	            gl.glPushMatrix();
+	            gl.glTranslatef(col * CELL_SIZE, 0.0f, 0.0f);
+	            gl.glBegin(GL2.GL_QUADS);
+	            gl.glVertex3f(0.0f, 0.0f, 0.0f);
+	            gl.glVertex3f(CELL_SIZE, 0.0f, 0.0f);
+	            gl.glVertex3f(CELL_SIZE, CELL_SIZE, 0.0f);
+	            gl.glVertex3f(0.0f, CELL_SIZE, 0.0f);
+	            gl.glEnd();
+	            gl.glPopMatrix();
+	        }
+	        gl.glPopMatrix();
+	    }
+
+	    gl.glPopMatrix();
+	}
+	
+	
+}
+
+
+
+/*
+ * 
+ * 
+		gl.glFlush();
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		//PUNTOS (x,y)
+//		gl.glVertex3f(pX(10.0),pY(5.0) , 0.0f);
+//		gl.glVertex3f(pX(15.0),pY(15.0) , 0.0f);
+//		gl.glVertex3f(pX(5.0),pY(15.0), 0.0f);
+		
+		gl.glVertex3f(-pX(400),pY(400), 0.0f);
+		gl.glVertex3f(-pX(400),-pY(400), 0.0f);
+		gl.glVertex3f(pX(400),-pY(400), 0.0f);
+		gl.glVertex3f(pX(400),pY(400), 0.0f);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3f(-pX(300),-pY(300), 0.0f);
+		gl.glVertex3f(pX(300),-pY(300), 0.0f);
+		gl.glVertex3f(pX(0),pY(300), 0.0f);
+		gl.glEnd();
+		float x, y, angle;
+		 Double a,b;
+		 for (angle = 0.0f; angle <= (2.0f * Math.PI); angle += 0.01f) {
+			 a = 0.6f * Math.sin(angle);
+			 b = 0.6f * Math.cos(angle);
+			 x=a.floatValue();
+			 y=b.floatValue();		 
+			 gl.glBegin(GL2.GL_POINTS);
+			 	gl.glVertex3f(x, y, 0.0f);
+			 gl.glEnd();
+			 }
+			 */
+
+
